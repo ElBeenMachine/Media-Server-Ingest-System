@@ -3,7 +3,9 @@ const fs = require("fs");
 const path = require("path");
 const chokidar = require("chokidar");
 const config = require("./config");
-const CR2 = require("cr2-raw");
+const ExifTool = require("exiftool-vendored").ExifTool;
+const exiftool = new ExifTool({ taskTimeoutMillis: 5000 });
+
 
 let ingest_folder;
 let output_folder;
@@ -31,6 +33,10 @@ const rules = [
     {
         extension: "CR2",
         convert: "JPG"
+    },
+    {
+        extension: "CR3",
+        convert: "JPG"
     }
 ];
 
@@ -44,12 +50,12 @@ const rules = [
         ignorePermissionErrors: false
     });
 
-    watcher.on('add', function(e_path) {
+    watcher.on('add', async function(e_path) {
         console.log('[File Added]', e_path, 'has been added to the ingest queue');
-        fs.stat(e_path, function (err, stat) {
+        fs.stat(e_path, async function (err, stat) {
             // Replace error checking with something appropriate for your app.
             if (err) throw err;
-            setTimeout(checkEnd, 15000, e_path, stat);
+            setTimeout(await checkEnd, 5000, e_path, stat);
         });
     });
 
@@ -59,16 +65,16 @@ const rules = [
     console.log("Email Updates: " + config.send_notification)
 })();
 
-function checkEnd(e_path, prev) {
-    fs.stat(e_path, function (err, stat) {
+async function checkEnd(e_path, prev) {
+    fs.stat(e_path, async function (err, stat) {
         // Replace error checking with something appropriate for your app.
         if (err) throw err;
         if (stat.mtime.getTime() === prev.mtime.getTime()) {
             console.log("[Copy Finished] Initiating transcoding of file " + e_path);
-            process_change(e_path)
+            await process_change(e_path)
         }
         else
-            setTimeout(checkEnd, 15000, e_path, stat);
+            setTimeout(await checkEnd, 5000, e_path, stat);
     });
 }
 
@@ -106,7 +112,11 @@ async function process_change(e_path) {
         let output_buffer;
         switch (input_format) {
             case "CR2":
-                output_buffer = await (await get_cr2_buffer(ingest_file_path)).previewImage();
+                output_buffer = await exiftool.extractBinaryTagToBuffer("PreviewImage", e_path);
+                break;
+
+            case "CR3":
+                output_buffer = await exiftool.extractBinaryTagToBuffer("PreviewImage", e_path);
                 break;
         
             default:
