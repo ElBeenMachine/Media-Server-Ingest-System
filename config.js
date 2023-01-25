@@ -6,7 +6,7 @@ module.exports = {
     ingest_dir: process.env.TRANSCODE_INGEST_FOLDER,
     output_dir: process.env.TRANSCODE_OUTPUT_FOLDER,
     db: {
-        host: process.env.DB_HOST,
+        host: process.env.TRANSCODE_DB_HOST,
         user: process.env.TRANSCODE_DB_USER,
         password: process.env.TRANSCODE_DB_PASSWORD,
         database: process.env.TRANSCODE_DB_NAME
