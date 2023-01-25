@@ -8,7 +8,7 @@ module.exports = class WebServer {
         this.port = _port;
         this.host = _host;
         this.app = express();
-        this.app.use("/", require("./Router"));
+        this.app.use("/", require("./router"));
 
         // Set route properties
         this.app.use(express.urlencoded({ extended: true }));
