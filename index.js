@@ -94,8 +94,8 @@ async function process_change(e_path) {
         console.log("[Rule Applied] " + `${name}.${rule_check.extension} => ${name}.${rule_check.convert}`);
         const output_format = rule_check.convert.toUpperCase();
         const input_format = rule_check.extension.toUpperCase();
-        const original_output_path = path.resolve(`${output_folder}\\${relative_directory}\\${input_format}`);
-        const convert_output_path = path.resolve(`${output_folder}\\${relative_directory}\\${output_format}`);
+        const original_output_path = path.resolve(`${output_folder}/${relative_directory}/${input_format}`);
+        const convert_output_path = path.resolve(`${output_folder}/${relative_directory}/${output_format}`);
 
         const original_output_file = `${filename}`;
         const convert_output_file = `${name}.${output_format}`;
@@ -114,13 +114,13 @@ async function process_change(e_path) {
                 break;
         }
 
-        await write_file(`${convert_output_path}\\${convert_output_file}`, output_buffer);
-        await write_file(`${original_output_path}\\${original_output_file}`, output_buffer);
+        await write_file(`${convert_output_path}/${convert_output_file}`, output_buffer);
+        await write_file(`${original_output_path}/${original_output_file}`, output_buffer);
         await delete_file(ingest_file_path);
     } else {
         const output_buffer = await fs.readFileSync(ingest_file_path);
         const output_path = path.resolve(output_folder + relative_path);
-        const output_directory = path.resolve(`${output_folder}\\${relative_directory}`);
+        const output_directory = path.resolve(`${output_folder}/${relative_directory}`);
         
         await create_file_output_path(output_directory);
         await write_file(output_path, output_buffer);
