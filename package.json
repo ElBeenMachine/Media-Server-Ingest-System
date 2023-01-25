@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "cr2-raw": "^1.1.0",
+    "dotenv": "^16.0.3"
+  }
+}
