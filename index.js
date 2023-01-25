@@ -71,6 +71,7 @@ async function checkEnd(e_path, prev) {
         if (err) throw err;
         if (stat.mtime.getTime() === prev.mtime.getTime()) {
             console.log("[Copy Finished] Initiating transcoding of file " + e_path);
+            // console.log(await exiftool.read(e_path));
             await process_change(e_path)
         }
         else
@@ -116,7 +117,7 @@ async function process_change(e_path) {
                 break;
 
             case "CR3":
-                output_buffer = await exiftool.extractBinaryTagToBuffer("PreviewImage", e_path);
+                output_buffer = await exiftool.extractBinaryTagToBuffer("JpgFromRaw", e_path);
                 break;
         
             default:
