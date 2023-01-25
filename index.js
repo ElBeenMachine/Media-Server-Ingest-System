@@ -49,7 +49,7 @@ const rules = [
         fs.stat(e_path, function (err, stat) {
             // Replace error checking with something appropriate for your app.
             if (err) throw err;
-            setTimeout(checkEnd, 30000, e_path, stat);
+            setTimeout(checkEnd, 15000, e_path, stat);
         });
     });
 
@@ -68,7 +68,7 @@ function checkEnd(e_path, prev) {
             process_change(e_path)
         }
         else
-            setTimeout(checkEnd, 30000, e_path, stat);
+            setTimeout(checkEnd, 15000, e_path, stat);
     });
 }
 
