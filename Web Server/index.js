@@ -38,6 +38,7 @@ class WebServer {
 
                 if(data.type === "TRANSCODE") {
                     if(processing) return;
+                    processing = true;
                     for(let _id of data._ids) {
                         let job;
                         try {
