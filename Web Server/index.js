@@ -30,9 +30,7 @@ class WebServer {
         const wss = new WebSocket.Server({ server });
         let processing = false;
         wss.on('connection', (ws) => {
-            if(!processing) {
-                ws.send(JSON.stringify({ type: "STATUS", processing}));
-            }
+            ws.send(JSON.stringify({ type: "STATUS", processing}));
 
             // connection is up, let's add a simple simple event
             ws.on('message', async (message) => {

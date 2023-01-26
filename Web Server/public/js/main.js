@@ -14,10 +14,10 @@ socket.onopen = function(event) {
                 loadErrors();
                 break;
             case "STATUS":
-                if(message.processing) {
+                if(message.processing == true) {
                     console.log("Server is currently busy.");
+                    document.body.innerHTML = "Server is Currently Processinsg. Please try again later.";
                 }
-                document.innerHTML = "Server is Currently Processinsg. Please try again later.";
                 break;
         }
     }
