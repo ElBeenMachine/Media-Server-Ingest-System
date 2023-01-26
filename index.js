@@ -23,7 +23,7 @@ module.exports.db = db;
 })();
 
 // Set up transcoder
-require("./Transcoder").listen();
+require("./Transcoder").watcher.listen();
 
 // Start Web Server
 if(config.web_server) {

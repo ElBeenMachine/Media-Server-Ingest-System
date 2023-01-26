@@ -11,4 +11,8 @@ router.get("/api/jobs", async (req, res) => {
     res.json(jobs);
 });
 
+router.post("/transcode", (req, res) => {
+    
+});
+
 module.exports = router;
