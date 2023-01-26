@@ -38,33 +38,63 @@
             body, html {
                 padding: 0;
                 margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-flow: column;
             }
-            #customers {
-                font-family: Arial, Helvetica, sans-serif;
-                border-collapse: collapse;
+
+            html {
                 width: 100%;
             }
 
-            #customers td, #customers th {
-                border: 1px solid #ddd;
-                padding: 8px;
+            body {
+                padding: 20px;
+                width: 90%;
             }
 
-            #customers tr:nth-child(even){background-color: #f2f2f2;}
+            * { 
+                font-family: Arial, Helvetica, sans-serif;
+            }
 
-            #customers tr:hover {background-color: #ddd;}
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 20px;
+            }
 
-            #customers th {
-                padding-top: 12px;
-                padding-bottom: 12px;
+            tr {
+                width: 100%;
+            }
+
+            table td, table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                width: 20%;
+            }
+
+            table tr:nth-child(even){background-color: #f2f2f2;}
+
+            table tr:hover {background-color: #ddd;}
+
+            table th {
                 text-align: left;
                 background-color: #04AA6D;
                 color: white;
+                width: 20%;
+            }
+
+            tbody {
+                max-height: 600px;
+                display: block;
+                width: 100%;
+                overflow: auto;
             }
         </style>
     </head>
     <body>
-        <table id="customers">
+        <h1>TRANSCODING QUEUE</h1>
+        <table id="queue">
             <tr>
                 <th>Date</th>
                 <th>Job ID</th>
@@ -72,8 +102,34 @@
                 <th>Transcode Status</th>
                 <th>Execution Time</th>
             </tr>
-          </table>
+        </table>
+        <div id="queueList"></div>
+        <button id = "transcode">Process Queue</button>
+
+            
+        <h1>TRANSCODING ERRORS</h1>
+        <table id="errors">
+            <tr>
+                <th>Date</th>
+                <th>Job ID</th>
+                <th>File Name</th>
+                <th>Transcode Status</th>
+                <th>Execution Time</th>
+            </tr>
+        </table>
+        <div id="errorsList"></div>
+        
+        <h1>ALL JOBS</h1>
+        <table id="all">
+            <tr>
+                <th>Date</th>
+                <th>Job ID</th>
+                <th>File Name</th>
+                <th>Transcode Status</th>
+                <th>Execution Time</th>
+            </tr>
+        </table>
+        <div id="allList"></div>
     </body>
-    <div id="demo"></div>
     <script></script>
 </html>

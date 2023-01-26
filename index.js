@@ -1,7 +1,6 @@
 // Import necessary modules
 require("dotenv").config();
 const config = require("./config");
-const WebServer = require("./Web Server");
 
 // Set up database
 const Database = require("./handlers/db");
@@ -24,9 +23,4 @@ module.exports.db = db;
 
 // Set up transcoder
 require("./Transcoder").watcher.listen();
-
-// Start Web Server
-if(config.web_server) {
-    const server = new WebServer(config.web_server_port, config.web_server_host);
-    server.listen();
-}
+require("./Web Server").listen();

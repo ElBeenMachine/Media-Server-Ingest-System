@@ -1,24 +1,75 @@
-(async() => {
-    const jobs = await axios.get("/api/jobs");
-    console.log(jobs);
-    $('#demo').pagination({
+let failures = [];
+let successes = [];
+
+var socket = new WebSocket('ws://localhost:8080');
+socket.onopen = function(event) {
+    console.log("Websocket Connection Established");
+
+    socket.onmessage = function(msg) {
+        const message = JSON.parse(msg.data);
+        if(message.type == "TRANSCODE_RESPONSE") {
+            document.getElementById(`queue-${message._id}`).remove();
+            loadAll();
+            loadErrors();
+        };
+    }
+};
+
+async function loadQueue() {
+    const jobs = await axios.get("/api/jobs/queue");
+    const queue = jobs.data.map(x => x._id);
+
+    var tableHeaderRowCount = 1;
+    var table = document.getElementById('queue');
+    var rowCount = table.rows.length;
+    for (var i = tableHeaderRowCount; i < rowCount; i++) {
+        table.deleteRow(tableHeaderRowCount);
+    }
+
+    populate("queue", jobs.data);
+    
+    $("#transcode").click(async(e) => {
+        socket.send(JSON.stringify({ type: "TRANSCODE", _ids: queue}));
+    });
+};
+
+async function loadErrors() {
+    const jobs = await axios.get("/api/jobs/errors");
+    $('#errorsList').pagination({
         dataSource: jobs.data,
         callback: function(data, pagination) {
             // template method of yourself
             var tableHeaderRowCount = 1;
-            var table = document.getElementById('customers');
+            var table = document.getElementById('errors');
             var rowCount = table.rows.length;
             for (var i = tableHeaderRowCount; i < rowCount; i++) {
                 table.deleteRow(tableHeaderRowCount);
             }
-            populate(data);
+            populate("errors", data);
         }
-    })
-})();
+    });
+};
 
-function populate(data) {
+async function loadAll() {
+    const jobs = await axios.get("/api/jobs");
+    $('#allList').pagination({
+        dataSource: jobs.data,
+        callback: function(data, pagination) {
+            // template method of yourself
+            var tableHeaderRowCount = 1;
+            var table = document.getElementById('all');
+            var rowCount = table.rows.length;
+            for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                table.deleteRow(tableHeaderRowCount);
+            }
+            populate("all", data);
+        }
+    });
+};
+
+function populate(name, data) {
     // Find a <table> element with id="myTable":
-    var table = document.getElementById("customers");
+    var table = document.getElementById(name);
 
     data.sort(function(a,b){
         // Turn your strings into dates, and then subtract them
@@ -33,6 +84,7 @@ function populate(data) {
 
         // Create an empty <tr> element and add it to the 1st position of the table:
         var row = table.insertRow(-1);
+        row.id = `${name}-${item._id}`;
     
         // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
         const _date = row.insertCell(0);
@@ -49,3 +101,7 @@ function populate(data) {
         _timeTaken.innerHTML = timeTaken;
     });
 }
+
+loadQueue();
+loadAll();
+loadErrors();

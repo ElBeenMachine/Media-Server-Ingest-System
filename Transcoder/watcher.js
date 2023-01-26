@@ -25,7 +25,7 @@ class Watcher {
         let _id;
         if(_exists.length == 0) {
             _id = crypto.randomUUID();
-            await db.query(`INSERT INTO Jobs (_id, fileName, ingestPath, processStatus, startTime) VALUES ("${_id}", "${path.basename(ingest_file_path)}", "${ingest_file_path}", "QUEUED", "${Date.now()}");`);
+            await db.query(`INSERT INTO Jobs (_id, fileName, ingestPath, processStatus) VALUES ("${_id}", "${path.basename(ingest_file_path)}", "${ingest_file_path}", "QUEUED");`);
             console.log(`[Job Queued] Job with id ${_id} has been added to the queue`);
         } else {
             _id = _exists[0]._id;
@@ -35,7 +35,7 @@ class Watcher {
     }
 }
 
-const watcher = new Watcher(config.ingest_dir, config.output_dir, config.rules);
+const watcher = new Watcher(config.ingest_dir);
 
 module.exports.listen = () => {
     const watch = chokidar.watch(watcher.getIngestDir(), {
