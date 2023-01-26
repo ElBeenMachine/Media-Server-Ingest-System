@@ -1,7 +1,7 @@
 let failures = [];
 let successes = [];
 
-var socket = new WebSocket(`ws://${window.location.host}`);
+var socket = new WebSocket(`${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`);
 socket.onopen = function(event) {
     console.log("Websocket Connection Established");
 
