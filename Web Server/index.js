@@ -3,6 +3,7 @@ const http = require("http");
 const WebSocket = require("ws");
 const ts = require("../Transcoder/transcoder");
 const config = require("../config")
+const { db } = require("../index");
 
 class WebServer {
     port;
@@ -27,15 +28,18 @@ class WebServer {
     listen() {
         const server = http.createServer(this.app);
         const wss = new WebSocket.Server({ server });
+        let processing = false;
         wss.on('connection', (ws) => {
+            if(!processing) {
+                ws.send(JSON.stringify({ type: "STATUS", processing}));
+            }
 
             // connection is up, let's add a simple simple event
             ws.on('message', async (message) => {
                 const data = JSON.parse(message);
 
                 if(data.type === "TRANSCODE") {
-                    console.log(data._ids);
-
+                    if(processing) return;
                     for(let _id of data._ids) {
                         let job;
                         try {
@@ -45,10 +49,9 @@ class WebServer {
                         }
                     
                         if(!job) {
-                            failures.push(_id);
+                            ws.send(JSON.stringify({ type: "TRANSCODE_RESPONSE", status: "failure", _id }));
                             continue;
                         }
-                    
                         let transcode;
                         try {
                             transcode = await ts.transcode(job);
@@ -58,6 +61,8 @@ class WebServer {
                             continue;
                         }
                     }
+
+                    processing = false;
                 }
             });
         });

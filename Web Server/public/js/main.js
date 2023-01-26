@@ -7,11 +7,19 @@ socket.onopen = function(event) {
 
     socket.onmessage = function(msg) {
         const message = JSON.parse(msg.data);
-        if(message.type == "TRANSCODE_RESPONSE") {
-            document.getElementById(`queue-${message._id}`).remove();
-            loadAll();
-            loadErrors();
-        };
+        switch (message.type) {
+            case "TRANSCODE_RESPONSE":
+                document.getElementById(`queue-${message._id}`).remove();
+                loadAll();
+                loadErrors();
+                break;
+            case "STATUS":
+                if(message.processing) {
+                    console.log("Server is currently busy.");
+                }
+                document.innerHTML = "Server is Currently Processinsg. Please try again later.";
+                break;
+        }
     }
 };
 
@@ -26,7 +34,7 @@ async function loadQueue() {
         table.deleteRow(tableHeaderRowCount);
     }
 
-    populate("queue", jobs.data);
+    populateQueue("queue", jobs.data);
     
     $("#transcode").click(async(e) => {
         socket.send(JSON.stringify({ type: "TRANSCODE", _ids: queue}));
@@ -66,6 +74,27 @@ async function loadAll() {
         }
     });
 };
+
+function populateQueue(name, data) {
+    // Find a <table> element with id="myTable":
+    var table = document.getElementById(name);
+
+    $.each(data, function(index, item) {
+        // Create an empty <tr> element and add it to the 1st position of the table:
+        var row = table.insertRow(-1);
+        row.id = `${name}-${item._id}`;
+    
+        // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+        const _id = row.insertCell(0);
+        const _fileName = row.insertCell(1);
+        const _status = row.insertCell(2);
+    
+        // Add some text to the new cells:
+        _id.innerHTML = item._id;
+        _fileName.innerHTML = item.fileName;
+        _status.innerHTML = item.processStatus;
+    });
+}
 
 function populate(name, data) {
     // Find a <table> element with id="myTable":

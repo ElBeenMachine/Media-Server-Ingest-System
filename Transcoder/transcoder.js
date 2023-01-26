@@ -110,7 +110,7 @@ module.exports.transcode = async function(job) {
     const _id = job._id;
 
     // Log that the queue is being processed
-    await db.query(`UPDATE Jobs SET processStatus = "PROCESSING" startTime = "${Date.now()}" WHERE _id = "${_id}";`)
+    await db.query(`UPDATE Jobs SET processStatus = "PROCESSING", startTime = "${Date.now()}" WHERE _id = "${_id}";`)
 
     // Define the output path
     const relative_path = path.resolve(e_path).split(transcoder.getIngestDir()).slice(1)[0];

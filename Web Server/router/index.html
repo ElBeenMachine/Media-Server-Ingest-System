@@ -38,10 +38,6 @@
             body, html {
                 padding: 0;
                 margin: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-flow: column;
             }
 
             html {
@@ -50,17 +46,21 @@
 
             body {
                 padding: 20px;
-                width: 90%;
+                width: 100%;
             }
 
             * { 
                 font-family: Arial, Helvetica, sans-serif;
+                box-sizing: border-box;
+            }
+
+            .buttons {
+                margin-top: 20px;
             }
 
             table {
                 border-collapse: collapse;
                 width: 100%;
-                margin: 20px;
             }
 
             tr {
@@ -90,17 +90,27 @@
                 width: 100%;
                 overflow: auto;
             }
+
+            #transcode {
+                margin-top: 20px;
+                background: #04AA6D;
+                padding: 10px 20px;
+                color: white;
+                border: none;
+                outline: none;
+                border-radius: 15px;
+                cursor: pointer;
+                font-size: 20px;
+            }
         </style>
     </head>
     <body>
         <h1>TRANSCODING QUEUE</h1>
         <table id="queue">
             <tr>
-                <th>Date</th>
                 <th>Job ID</th>
                 <th>File Name</th>
                 <th>Transcode Status</th>
-                <th>Execution Time</th>
             </tr>
         </table>
         <div id="queueList"></div>
@@ -117,7 +127,7 @@
                 <th>Execution Time</th>
             </tr>
         </table>
-        <div id="errorsList"></div>
+        <div id="errorsList" class = "buttons"></div>
         
         <h1>ALL JOBS</h1>
         <table id="all">
@@ -129,7 +139,7 @@
                 <th>Execution Time</th>
             </tr>
         </table>
-        <div id="allList"></div>
+        <div id="allList" class = "buttons"></div>
     </body>
     <script></script>
 </html>
